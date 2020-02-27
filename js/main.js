@@ -16,7 +16,7 @@ var TYPE_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'con
 var TYPE_DESCRIPTION = ['Тут все круто', 'Тут не очень круто', 'Сюда лучше не приезжать', 'Мы вас ждем', 'Мы вас НЕ ждем'];
 var TYPE_PHOTO = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
-// функция рандомного числа
+// функция рандомного числа.
 var genRandomNumber = function (min, max) {
   if (!max) {
     return Math.round(Math.random() * min);
@@ -25,10 +25,24 @@ var genRandomNumber = function (min, max) {
   }
 };
 
+// еще вариант рандомного числа.
+// var getRandomInteger = function (min, max) {
+//   return Math.floor(Math.random() * (max - min + 1)) + min;
+// }
+
 // функция рандомной строки из массива
 var genRandomElement = function (element) {
   var rand = Math.floor(Math.random() * element.length);
   return element[rand];
+};
+
+
+var renderFeatures = function (arr) { // Функция строк случайно длинны из Массива
+  var newArray = [];
+  for (var i = 0; i < genRandomNumber(1, arr.length); i++) {
+    newArray[i] = arr[i];
+  }
+  return newArray;
 };
 
 var genPins = function () { // функция создания пина
@@ -47,15 +61,16 @@ var genPins = function () { // функция создания пина
         guests: genRandomNumber(20),
         checkin: genRandomElement(CHECKIN_TIME),
         checkout: genRandomElement(CHECKOUT_TIME),
-        features: genRandomElement(TYPE_FEATURES),
+        features: renderFeatures(TYPE_FEATURES),
         description: genRandomElement(TYPE_DESCRIPTION),
-        photos: genRandomElement(TYPE_PHOTO)
+        photos: renderFeatures(TYPE_PHOTO)
       },
       location: {
         x: genRandomNumber(0, 1200),
-        y: genRandomNumber(0, 750)
+        y: genRandomNumber(0, 704)
       }
     });
+    console.log(pins[i].offer.photos)
   }
 };
 
@@ -75,3 +90,4 @@ for (var i = 0; i < pins.length; i++) {
 }
 
 mapPins.appendChild(fragment); // вставляем фрагмент в разметку.
+
