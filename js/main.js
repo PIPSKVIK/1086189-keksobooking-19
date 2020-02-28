@@ -5,16 +5,17 @@ mapAdvertisement.classList.remove('map--faded'); // У блока .map убер�
 
 var mapPins = document.querySelector('.map__pins'); // Нашли метку обьявления
 var simularPin = document.querySelector('#pin').content.querySelector('.map__pin'); // нашли шаблон который мы будем копировать
-
 var pins = [];
 var PINS_QUANTITY = 8;
-
 var TYPE_ROOM = ['place', 'flat', 'house', 'bungalo'];
 var CHECKIN_TIME = ['12:00', '13:00', '14:00'];
 var CHECKOUT_TIME = ['12:00', '13:00', '14:00'];
 var TYPE_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var TYPE_DESCRIPTION = ['Тут все круто', 'Тут не очень круто', 'Сюда лучше не приезжать', 'Мы вас ждем', 'Мы вас НЕ ждем'];
 var TYPE_PHOTO = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+var mapArea = document.querySelector('.map').clientWidth;
+var Y_MIN = 130;
+var Y_MAX = 630;
 
 // функция рандомного числа.
 var genRandomNumber = function (min, max) {
@@ -24,11 +25,6 @@ var genRandomNumber = function (min, max) {
     return Math.round(Math.random() * (max - min) + min);
   }
 };
-
-// еще вариант рандомного числа.
-// var getRandomInteger = function (min, max) {
-//   return Math.floor(Math.random() * (max - min + 1)) + min;
-// }
 
 // функция рандомной строки из массива
 var genRandomElement = function (element) {
@@ -66,11 +62,10 @@ var genPins = function () { // функция создания пина
         photos: renderFeatures(TYPE_PHOTO)
       },
       location: {
-        x: genRandomNumber(0, 1200),
-        y: genRandomNumber(0, 704)
+        x: genRandomNumber(0, mapArea),
+        y: genRandomNumber(Y_MIN, Y_MAX)
       }
     });
-    console.log(pins[i].offer.photos)
   }
 };
 
