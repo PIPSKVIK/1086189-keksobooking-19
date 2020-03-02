@@ -18,6 +18,7 @@ var Y_MIN = 130;
 var Y_MAX = 630;
 
 var simularCard = document.querySelector('#card').content.querySelector('.map__card');
+var mapFilterConteiner = document.querySelector('.map__filters-container');
 
 
 // функция рандомного числа.
@@ -62,7 +63,7 @@ var genPins = function () { // функция создания пина
         checkout: genRandomElement(CHECKOUT_TIME),
         features: renderFeatures(TYPE_FEATURES),
         description: genRandomElement(TYPE_DESCRIPTION),
-        photos: renderFeatures(TYPE_PHOTO)
+        photos: genRandomElement(TYPE_PHOTO)
       },
       location: {
         x: genRandomNumber(0, mapArea),
@@ -114,5 +115,5 @@ for (var i = 0; i < pins.length; i++) {
 }
 
 mapPins.appendChild(fragment); // вставляем фрагмент в разметку.
-mapAdvertisement.appendChild(newFragment);
+mapAdvertisement.insertBefore(newFragment, mapFilterConteiner); // Вставляем .map перед блоком.map__filters-container
 
