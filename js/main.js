@@ -117,3 +117,5 @@ for (var i = 0; i < pins.length; i++) {
 mapPins.appendChild(fragment); // вставляем фрагмент в разметку.
 mapAdvertisement.insertBefore(newFragment, mapFilterConteiner); // Вставляем .map перед блоком.map__filters-container
 
+// тест
+
