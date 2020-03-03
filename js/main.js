@@ -7,7 +7,7 @@ var mapPins = document.querySelector('.map__pins'); // Нашли метку о�
 var simularPin = document.querySelector('#pin').content.querySelector('.map__pin'); // нашли шаблон который мы будем копировать
 var pins = [];
 var PINS_QUANTITY = 8;
-var TYPE_ROOM = ['place', 'flat', 'house', 'bungalo'];
+var TYPE_ROOM = ['Дворец', 'Квартира', 'Дом', 'Бунгало'];
 var CHECKIN_TIME = ['12:00', '13:00', '14:00'];
 var CHECKOUT_TIME = ['12:00', '13:00', '14:00'];
 var TYPE_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
@@ -16,6 +16,10 @@ var TYPE_PHOTO = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://
 var mapArea = document.querySelector('.map').clientWidth;
 var Y_MIN = 130;
 var Y_MAX = 630;
+
+var simularCard = document.querySelector('#card').content.querySelector('.map__card');
+var mapFilterConteiner = document.querySelector('.map__filters-container');
+
 
 // функция рандомного числа.
 var genRandomNumber = function (min, max) {
@@ -59,7 +63,7 @@ var genPins = function () { // функция создания пина
         checkout: genRandomElement(CHECKOUT_TIME),
         features: renderFeatures(TYPE_FEATURES),
         description: genRandomElement(TYPE_DESCRIPTION),
-        photos: renderFeatures(TYPE_PHOTO)
+        photos: genRandomElement(TYPE_PHOTO)
       },
       location: {
         x: genRandomNumber(0, mapArea),
@@ -79,10 +83,39 @@ var renderPin = function (index) {
   return pinElement; // возвращаем
 };
 
+
+var renderCard = function (index) {
+  var mapElement = simularCard.cloneNode(true);
+
+  mapElement.querySelector('.popup__title').textContent = pins[index].offer.title;
+  mapElement.querySelector('.popup__text--address').textContent = pins[index].offer.address;
+  mapElement.querySelector('.popup__text--price').textContent = pins[index].offer.price + '₽/ночь';
+  mapElement.querySelector('.popup__type').textContent = pins[index].offer.type; // вот тут не совсем правильно работает, иногда появляется undefined, функция рандома не та.
+  mapElement.querySelector('.popup__text--capacity').textContent = (pins[index].offer.rooms) + ' комнаты для ' + (pins[index].offer.guests) + ' гостей';
+  mapElement.querySelector('.popup__text--time').textContent = 'Заезд после' + (pins[index].offer.checkin) + ', выезд до' + (pins[index].offer.checkout);
+
+  mapElement.querySelector('.popup__features').textContent = pins[index].offer.features;
+
+
+  mapElement.querySelector('.popup__description').textContent = pins[index].offer.description;
+  mapElement.querySelector('.popup__photo').src = pins[index].offer.photos;
+  mapElement.querySelector('.popup__avatar').src = pins[index].author.avatar;
+
+  return mapElement;
+};
+
 var fragment = document.createDocumentFragment(); // просто тиснул из демки (создаем фрагмент)
 for (var i = 0; i < pins.length; i++) {
   fragment.appendChild(renderPin(i));
 }
 
+var newFragment = document.createDocumentFragment();
+for (var i = 0; i < pins.length; i++) {
+  newFragment.appendChild(renderCard(i));
+}
+
 mapPins.appendChild(fragment); // вставляем фрагмент в разметку.
+mapAdvertisement.insertBefore(newFragment, mapFilterConteiner); // Вставляем .map перед блоком.map__filters-container
+
+// тест
 
