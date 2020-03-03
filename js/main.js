@@ -1,7 +1,7 @@
 'use strict';
 
 var mapAdvertisement = document.querySelector('.map');
-mapAdvertisement.classList.remove('map--faded'); // У блока .map уберите класс .map--faded.
+// mapAdvertisement.classList.remove('map--faded'); // У блока .map уберите класс .map--faded.
 
 var mapPins = document.querySelector('.map__pins'); // Нашли метку обьявления
 var simularPin = document.querySelector('#pin').content.querySelector('.map__pin'); // нашли шаблон который мы будем копировать
@@ -18,7 +18,7 @@ var Y_MIN = 130;
 var Y_MAX = 630;
 
 var simularCard = document.querySelector('#card').content.querySelector('.map__card');
-var mapFilterConteiner = document.querySelector('.map__filters-container');
+// var mapFilterConteiner = document.querySelector('.map__filters-container');
 
 
 // функция рандомного числа.
@@ -90,13 +90,10 @@ var renderCard = function (index) {
   mapElement.querySelector('.popup__title').textContent = pins[index].offer.title;
   mapElement.querySelector('.popup__text--address').textContent = pins[index].offer.address;
   mapElement.querySelector('.popup__text--price').textContent = pins[index].offer.price + '₽/ночь';
-  mapElement.querySelector('.popup__type').textContent = pins[index].offer.type; // вот тут не совсем правильно работает, иногда появляется undefined, функция рандома не та.
+  mapElement.querySelector('.popup__type').textContent = pins[index].offer.type;
   mapElement.querySelector('.popup__text--capacity').textContent = (pins[index].offer.rooms) + ' комнаты для ' + (pins[index].offer.guests) + ' гостей';
   mapElement.querySelector('.popup__text--time').textContent = 'Заезд после' + (pins[index].offer.checkin) + ', выезд до' + (pins[index].offer.checkout);
-
   mapElement.querySelector('.popup__features').textContent = pins[index].offer.features;
-
-
   mapElement.querySelector('.popup__description').textContent = pins[index].offer.description;
   mapElement.querySelector('.popup__photo').src = pins[index].offer.photos;
   mapElement.querySelector('.popup__avatar').src = pins[index].author.avatar;
@@ -114,8 +111,81 @@ for (var i = 0; i < pins.length; i++) {
   newFragment.appendChild(renderCard(i));
 }
 
-mapPins.appendChild(fragment); // вставляем фрагмент в разметку.
-mapAdvertisement.insertBefore(newFragment, mapFilterConteiner); // Вставляем .map перед блоком.map__filters-container
+//                                        module4-task2
 
-// тест
+var pinMain = document.querySelector('.map__pin--main');
+var ENTER_KEY = 'Enter';
+var address = document.querySelector('#address');
+var form = document.querySelector('.ad-form');
+var headingAd = form.querySelector('#title');
+var formDisabled = form.querySelectorAll('fieldset');
+var roomsNumber = form.querySelector('#room_number');
+var capacitySelection = form.querySelector('#capacity');
+var adSubmit = form.querySelector('.ad-form__submit');
+
+
+var removeFaded = function () {
+  mapAdvertisement.classList.remove('map--faded');
+  form.classList.remove('ad-form--disabled');
+};
+
+pinMain.addEventListener('mousedown', function (evt) {
+  if (evt.which === 1) {
+    removeFaded();
+    formDisabled.forEach(function (fieldset) {
+      fieldset.removeAttribute('disabled');
+    });
+    mapPins.appendChild(fragment); // вставляем фрагмент в разметку.
+    // mapAdvertisement.insertBefore(newFragment, mapFilterConteiner);
+  }
+});
+
+pinMain.addEventListener('keydown', function (evt) {
+  if (evt.key === ENTER_KEY) {
+    removeFaded();
+    formDisabled.forEach(function (fieldset) {
+      fieldset.removeAttribute('disabled');
+    });
+    mapPins.appendChild(fragment); // вставляем фрагмент в разметку.
+    // mapAdvertisement.insertBefore(newFragment, mapFilterConteiner);
+  }
+});
+
+
+var getCoords = function (elem) { // определяет координаты объекта на страницы. Так же, можно найти размеры и top - bot
+  var box = elem.getBoundingClientRect();
+  return box.x + ', ' + box.y;
+};
+
+address.value = getCoords(pinMain);
+
+headingAd.addEventListener('invalid', function () {
+  if (headingAd.validity.tooShort) {
+    headingAd.setCustomValidity('Йоу, минимум же 2 символа нужно БРО');
+  } else if (headingAd.validity.tooLong) {
+    headingAd.setCustomValidity('Оу оу оу, ты куда разогнался 50 символов Максимум!');
+  } else if (headingAd.validity.valueMissing) {
+    headingAd.setCustomValidity('Полюбасу нужно заполнить тут!');
+  }
+});
+
+
+function checkRoomsCapacityValue(roomsValue, capacityValue) {
+  if (roomsValue === '1' && capacityValue === '1') {
+    roomsNumber.setCustomValidity('');
+  } else if (roomsValue === '2' && (capacityValue < '3' && capacityValue > '0')) {
+    roomsNumber.setCustomValidity('');
+  } else if (roomsValue === '3' && (capacityValue <= '3' && capacityValue > '0')) {
+    roomsNumber.setCustomValidity('');
+  } else if (roomsValue === '100' && capacityValue === '0') {
+    roomsNumber.setCustomValidity('');
+  } else {
+    roomsNumber.setCustomValidity('Количество шконок ' + '(' + roomsValue + ') ' + 'не варик для  ' + capacityValue + ' чуваков');
+  }
+  return roomsNumber;
+}
+
+adSubmit.addEventListener('click', function () {
+  return checkRoomsCapacityValue(roomsNumber.value, capacitySelection.value);
+});
 
