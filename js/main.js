@@ -1,7 +1,6 @@
 'use strict';
 
 var mapAdvertisement = document.querySelector('.map');
-// mapAdvertisement.classList.remove('map--faded'); // У блока .map уберите класс .map--faded.
 
 var mapPins = document.querySelector('.map__pins'); // Нашли метку обьявления
 var simularPin = document.querySelector('#pin').content.querySelector('.map__pin'); // нашли шаблон который мы будем копировать
@@ -123,14 +122,30 @@ var roomsNumber = form.querySelector('#room_number');
 var capacitySelection = form.querySelector('#capacity');
 var adSubmit = form.querySelector('.ad-form__submit');
 
+var getCoordsPinCenter = function (elem) {
+  var box = elem.getBoundingClientRect();
+  return 'X: ' + box.x + '; ' + 'Y: ' + box.y;
+};
+
+address.value = getCoordsPinCenter(mapPins);
+
+var getCoordsPinTip = function (elem) { // определяет координаты объекта на странице. Так же, можно найти размеры и top - bot
+  var box = elem.getBoundingClientRect();
+  return 'X: ' + box.x + '; ' + 'Y: ' + box.bottom;
+};
+
+formDisabled.forEach(function (fieldset) {
+  fieldset.setAttribute('disabled', 1);
+});
 
 var removeFaded = function () {
   mapAdvertisement.classList.remove('map--faded');
   form.classList.remove('ad-form--disabled');
 };
 
-pinMain.addEventListener('mousedown', function (evt) {
-  if (evt.which === 1) {
+pinMain.addEventListener('mousedown', function () {
+  address.value = getCoordsPinTip(pinMain);
+  if (event.button === 0) {
     removeFaded();
     formDisabled.forEach(function (fieldset) {
       fieldset.removeAttribute('disabled');
@@ -141,6 +156,7 @@ pinMain.addEventListener('mousedown', function (evt) {
 });
 
 pinMain.addEventListener('keydown', function (evt) {
+  address.value = getCoordsPinTip(pinMain);
   if (evt.key === ENTER_KEY) {
     removeFaded();
     formDisabled.forEach(function (fieldset) {
@@ -152,20 +168,15 @@ pinMain.addEventListener('keydown', function (evt) {
 });
 
 
-var getCoords = function (elem) { // определяет координаты объекта на страницы. Так же, можно найти размеры и top - bot
-  var box = elem.getBoundingClientRect();
-  return box.x + ', ' + box.y;
-};
-
-address.value = getCoords(pinMain);
-
-headingAd.addEventListener('invalid', function () {
+headingAd.addEventListener('change', function () {
   if (headingAd.validity.tooShort) {
-    headingAd.setCustomValidity('Йоу, минимум же 2 символа нужно БРО');
+    headingAd.setCustomValidity('Имя должно состоять минимум из 2-х символов');
   } else if (headingAd.validity.tooLong) {
-    headingAd.setCustomValidity('Оу оу оу, ты куда разогнался 50 символов Максимум!');
+    headingAd.setCustomValidity('Имя не должно превышать 25-ти символов');
   } else if (headingAd.validity.valueMissing) {
-    headingAd.setCustomValidity('Полюбасу нужно заполнить тут!');
+    headingAd.setCustomValidity('Поле должно быть обязательно заполнено');
+  } else {
+    headingAd.setCustomValidity('');
   }
 });
 
@@ -180,7 +191,7 @@ function checkRoomsCapacityValue(roomsValue, capacityValue) {
   } else if (roomsValue === '100' && capacityValue === '0') {
     roomsNumber.setCustomValidity('');
   } else {
-    roomsNumber.setCustomValidity('Количество шконок ' + '(' + roomsValue + ') ' + 'не варик для  ' + capacityValue + ' чуваков');
+    roomsNumber.setCustomValidity('Колличество комнат ' + '(' + roomsValue + ') ' + 'не подходит для ' + '(' + capacityValue + ')' + ' человек');
   }
   return roomsNumber;
 }
