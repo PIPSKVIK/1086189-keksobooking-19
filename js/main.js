@@ -170,9 +170,9 @@ pinMain.addEventListener('keydown', function (evt) {
 
 headingAd.addEventListener('invalid', function (evt) {
   if (headingAd.validity.tooShort) {
-    headingAd.setCustomValidity('Имя должно состоять минимум из 2-х символов');
+    headingAd.setCustomValidity('Имя должно состоять минимум из 30-ти символов');
   } else if (headingAd.validity.tooLong) {
-    headingAd.setCustomValidity('Имя не должно быть более 25-ти символов');
+    headingAd.setCustomValidity('Имя не должно быть более 100-а символов');
   } else if (headingAd.validity.valueMissing) {
     headingAd.setCustomValidity('Обязательное поле для заполнения');
   } else {
