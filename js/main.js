@@ -168,13 +168,13 @@ pinMain.addEventListener('keydown', function (evt) {
 });
 
 
-headingAd.addEventListener('change', function () {
+headingAd.addEventListener('invalid', function (evt) {
   if (headingAd.validity.tooShort) {
     headingAd.setCustomValidity('Имя должно состоять минимум из 2-х символов');
   } else if (headingAd.validity.tooLong) {
-    headingAd.setCustomValidity('Имя не должно превышать 25-ти символов');
+    headingAd.setCustomValidity('Имя не должно быть более 25-ти символов');
   } else if (headingAd.validity.valueMissing) {
-    headingAd.setCustomValidity('Поле должно быть обязательно заполнено');
+    headingAd.setCustomValidity('Обязательное поле для заполнения');
   } else {
     headingAd.setCustomValidity('');
   }
